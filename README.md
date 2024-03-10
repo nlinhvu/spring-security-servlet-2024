@@ -1,3 +1,5 @@
 # Spring Security Servlet
 
-![Diagram](./gif/diagram.gif)
+![Diagram](./gif/diagram1.gif)
+
+![Diagram](./gif/diagram2.gif)
