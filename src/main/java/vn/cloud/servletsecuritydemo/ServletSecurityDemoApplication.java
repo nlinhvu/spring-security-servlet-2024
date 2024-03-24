@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -19,20 +19,23 @@ public class ServletSecurityDemoApplication {
 	}
 
 	@Bean
-	@Order(SecurityProperties.BASIC_AUTH_ORDER - 1)
-	SecurityFilterChain apiKeySecurityFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatchers((matchers) -> matchers.requestMatchers("/api-key/**"));
-		http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
-		http.addFilterBefore(new ApiKeyFilter(), AuthorizationFilter.class);
-		return http.build();
-	}
-
-	@Bean
 	@Order(SecurityProperties.BASIC_AUTH_ORDER)
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
-		http.formLogin(withDefaults());
-		http.httpBasic(withDefaults());
-		return http.build();
+		return http
+				.sessionManagement(withDefaults())
+				.securityContext(withDefaults())
+				.headers(withDefaults())
+				.cors(withDefaults())
+				.csrf(withDefaults())
+				.logout(withDefaults())
+				.requestCache(withDefaults())
+				.servletApi(withDefaults())
+				.anonymous(withDefaults())
+				.exceptionHandling(withDefaults())
+				.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated())
+//				.formLogin(withDefaults())
+				.httpBasic(withDefaults())
+				.addFilterBefore(new ApiKeyFilter(), UsernamePasswordAuthenticationFilter.class)
+				.build();
 	}
 }
